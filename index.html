@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tool24h - GAME AUTO</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -186,13 +186,15 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
-                    <button class="theme-bg text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">TẤT CẢ</button>
-                    <button class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">TÀI XỈU</button>
-                    <button class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">SICBO</button>
-                    <button class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">BACCARAT</button>
+                <!-- Danh mục phân loại -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5" id="categoryFilterContainer">
+                    <button onclick="filterCategory('TẤT CẢ')" class="theme-bg text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">TẤT CẢ</button>
+                    <button onclick="filterCategory('TÀI XỈU')" class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">TÀI XỈU</button>
+                    <button onclick="filterCategory('SICBO')" class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">SICBO</button>
+                    <button onclick="filterCategory('BACCARAT')" class="bg-[#121c33] text-zinc-400 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0">BACCARAT</button>
                 </div>
 
+                <!-- Box GAME AUTO & DANH SÁCH TOOL ĐƯỢC ADMIN CẬP NHẬT -->
                 <div class="bg-[#10192e] border border-[#1a2942] rounded-2xl p-4 text-center space-y-3">
                     <span class="bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
                         MỚI • AUTO CƯỢC TRỰC TIẾP TRÊN WEB
@@ -201,14 +203,9 @@
                         <h3 class="text-xl font-black text-white tracking-wide">GAME AUTO</h3>
                         <p class="text-[11px] text-zinc-400">Đăng nhập tài khoản game • Trải nghiệm</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 pt-1">
-                        <button class="theme-bg text-white py-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow">
-                            TÀI XỈU MD5
-                        </button>
-                        <button class="bg-[#16233d] hover:bg-[#1a2942] text-white py-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border border-[#223554]">
-                            TÀI XỈU HŨ
-                        </button>
-                    </div>
+                    
+                    <!-- VÙNG RENDER NÚT TOOL ĐÃ ĐỒNG BỘ CHO TẤT CẢ TÀI KHOẢN -->
+                    <div id="homeToolsContainer" class="grid grid-cols-2 gap-3 pt-1"></div>
                 </div>
             </section>
 
@@ -481,7 +478,6 @@
         <div id="modal-auth" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
             <div class="bg-[#111622] border border-[#1f293d] rounded-2xl w-full max-w-sm p-5 shadow-2xl relative">
                 
-                <!-- HÀNG TIÊU ĐỀ TABS & NÚT ĐÓNG X -->
                 <div class="flex items-center justify-between pb-3 border-b border-[#1e2a3f]">
                     <div class="flex items-center gap-6">
                         <button onclick="switchAuthTab('login')" id="authTabLogin" class="text-sm font-black text-[#ec4899] border-b-2 border-[#ec4899] pb-1 transition tracking-wider">
@@ -584,7 +580,7 @@
             </div>
         </div>
 
-        <!-- ================= MODAL BẢNG QUẢN TRỊ ADMIN ================= -->
+        <!-- ================= MODAL BẢNG QUẢN TRỊ ADMIN (CÓ GẮN FILE HTML TOOL & CẬP NHẬT TẤT CẢ) ================= -->
         <div id="modal-admin-control" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
             <div class="bg-[#0c1322] border border-[#1a2942] rounded-2xl w-full max-w-sm p-5 space-y-4 max-h-[88vh] overflow-y-auto text-left shadow-2xl">
                 <div class="flex justify-between items-center border-b border-[#1a2942] pb-2">
@@ -594,18 +590,59 @@
                     <button onclick="closeModal('modal-admin-control')" class="text-zinc-500 hover:text-white text-sm">✕</button>
                 </div>
 
-                <!-- 1. Danh sách User (Kèm nút Nạp tiền & Nút Xóa tài khoản) -->
-                <div class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
+                <!-- 1. GẮN FILE TOOL HTML VÀ CẬP NHẬT TẤT CẢ TÀI KHOẢN -->
+                <div class="space-y-2 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
                     <div class="flex justify-between items-center">
-                        <label class="text-[10px] text-cyan-400 font-black block uppercase">1. Quản lý tài khoản hệ thống</label>
-                        <span id="adminTotalUserCount" class="text-[9px] bg-cyan-500/20 text-cyan-400 font-bold px-1.5 py-0.2 rounded">0 User</span>
+                        <label class="text-[10px] text-emerald-400 font-black block uppercase">
+                            <i class="fa-solid fa-file-code mr-1"></i> 1. Gắn File Tool HTML
+                        </label>
+                        <span id="adminTotalToolsCount" class="text-[9px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.2 rounded">0 Tool</span>
                     </div>
-                    <div id="adminUserListContainer" class="max-h-48 overflow-y-auto space-y-2 pr-1 pt-1 text-[11px]"></div>
+                    
+                    <div class="space-y-2 text-xs">
+                        <input type="text" id="adminToolName" placeholder="Tên Tool (VD: Tool VIP Pro, Auto Game...)" class="w-full bg-[#10192e] border border-[#1a2942] rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none theme-border">
+                        
+                        <!-- Chọn file HTML từ máy -->
+                        <div class="bg-[#10192e] border border-dashed border-[#1a2942] rounded-lg p-2.5 text-center">
+                            <label class="cursor-pointer block">
+                                <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-lg mb-1 block"></i>
+                                <span class="text-[11px] text-zinc-300 font-bold block" id="fileChosenLabel">Bấm để chọn file .html từ máy</span>
+                                <span class="text-[9px] text-zinc-500 block">Hệ thống sẽ nạp toàn bộ code tool vào shop</span>
+                                <input type="file" id="adminToolFileInput" accept=".html,.htm" onchange="handleToolFileSelect(this)" class="hidden">
+                            </label>
+                        </div>
+
+                        <!-- Hoặc dán mã code HTML trực tiếp -->
+                        <div>
+                            <span class="text-[9px] text-zinc-400 block mb-0.5">Hoặc dán trực tiếp mã HTML vào đây:</span>
+                            <textarea id="adminToolRawHtml" rows="3" placeholder="<!DOCTYPE html><html>... dán code tool vào đây..." class="w-full bg-[#10192e] border border-[#1a2942] rounded-lg p-2 text-[10px] text-cyan-300 font-mono focus:outline-none"></textarea>
+                        </div>
+
+                        <!-- NÚT CẬP NHẬT TẤT CẢ TÀI KHOẢN -->
+                        <button onclick="adminDeployToolToAll()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-2.5 rounded-lg text-xs transition shadow flex items-center justify-center gap-1.5 active:scale-[0.99]">
+                            <i class="fa-solid fa-bolt"></i> CẬP NHẬT TẤT CẢ TÀI KHOẢN
+                        </button>
+                    </div>
+
+                    <!-- Danh sách Tool đang chạy -->
+                    <div class="pt-2 border-t border-[#1a2942]">
+                        <span class="text-[9px] font-bold text-zinc-400 uppercase block mb-1">Các Tool đang phân phối cho User:</span>
+                        <div id="adminToolsListContainer" class="max-h-28 overflow-y-auto space-y-1.5 pr-1 text-[11px]"></div>
+                    </div>
                 </div>
 
-                <!-- 2. Cấp tiền theo Token -->
+                <!-- 2. Quản lý User & Xóa tài khoản -->
                 <div class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
-                    <label class="text-[10px] text-zinc-400 font-bold block uppercase">2. Cấp tiền theo Token Acc</label>
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] text-cyan-400 font-black block uppercase">2. Quản lý tài khoản hệ thống</label>
+                        <span id="adminTotalUserCount" class="text-[9px] bg-cyan-500/20 text-cyan-400 font-bold px-1.5 py-0.2 rounded">0 User</span>
+                    </div>
+                    <div id="adminUserListContainer" class="max-h-36 overflow-y-auto space-y-2 pr-1 pt-1 text-[11px]"></div>
+                </div>
+
+                <!-- 3. Cấp tiền theo Token -->
+                <div class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
+                    <label class="text-[10px] text-zinc-400 font-bold block uppercase">3. Cấp tiền theo Token Acc</label>
                     <input type="text" id="adminTargetToken" placeholder="Token User (VD: TK-xxxx)" class="w-full bg-[#10192e] border border-[#1a2942] rounded-lg px-2.5 py-1.5 text-xs text-white font-mono uppercase focus:outline-none">
                     <div class="flex gap-2 pt-1">
                         <input type="number" id="adminGrantAmount" value="50000" step="10000" placeholder="Số tiền" class="flex-1 bg-[#10192e] border border-[#1a2942] rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:outline-none">
@@ -613,18 +650,18 @@
                     </div>
                 </div>
 
-                <!-- 3. Duyệt đơn nạp -->
+                <!-- 4. Duyệt đơn nạp -->
                 <div class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
                     <div class="flex justify-between items-center">
-                        <label class="text-[10px] text-zinc-400 font-bold uppercase">3. Duyệt nạp tiền ngân hàng</label>
+                        <label class="text-[10px] text-zinc-400 font-bold uppercase">4. Duyệt nạp tiền ngân hàng</label>
                         <span id="pendingCountBadge" class="text-[9px] bg-amber-500/20 text-amber-400 font-bold px-1.5 py-0.2 rounded">0 đơn chờ</span>
                     </div>
-                    <div id="adminPendingDeposits" class="max-h-32 overflow-y-auto space-y-1.5 pr-1 pt-1 text-[11px]"></div>
+                    <div id="adminPendingDeposits" class="max-h-28 overflow-y-auto space-y-1.5 pr-1 pt-1 text-[11px]"></div>
                 </div>
 
-                <!-- 4. Tạo Key VIP -->
+                <!-- 5. Tạo Key VIP -->
                 <div class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-[#1a2942]">
-                    <label class="text-[10px] text-zinc-400 font-bold block uppercase">4. Tạo Key VIP</label>
+                    <label class="text-[10px] text-zinc-400 font-bold block uppercase">5. Tạo Key VIP</label>
                     <div class="flex gap-2">
                         <select id="menuGrantDuration" class="flex-1 bg-[#10192e] border border-[#1a2942] rounded-lg px-2 py-1.5 text-xs text-white">
                             <option value="1">VIP 1 Ngày</option>
@@ -640,6 +677,24 @@
                 <button onclick="revokeAdmin()" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 py-2 rounded-lg font-bold text-xs transition">
                     Đăng Xuất Quyền Admin
                 </button>
+            </div>
+        </div>
+
+        <!-- ================= MODAL CHẠY TOOL HTML FULLSCREEN CHO USER ================= -->
+        <div id="modal-tool-runner" class="fixed inset-0 bg-black z-50 flex flex-col hidden">
+            <!-- Header khung Tool -->
+            <div class="bg-[#0c1322] border-b border-[#1a2942] px-4 py-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <h3 class="text-xs font-black text-white" id="toolRunnerTitle">Đang chạy Tool...</h3>
+                </div>
+                <button onclick="closeToolRunner()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/40 text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-xmark"></i> Đóng Tool
+                </button>
+            </div>
+            <!-- Khung hiển thị nội dung Tool HTML -->
+            <div class="flex-1 w-full h-full bg-black relative">
+                <iframe id="toolRunnerFrame" class="w-full h-full border-0" sandbox="allow-scripts allow-same-origin allow-forms allow-modals"></iframe>
             </div>
         </div>
 
@@ -697,7 +752,6 @@
     <script>
         const MASTER_ADMIN_KEY = "ADMIN2026";
 
-        // Tự động dọn dẹp các tài khoản mẫu cũ nếu có
         let savedUsers = JSON.parse(localStorage.getItem('sys_users')) || {};
         if (savedUsers["duykhanh"]) {
             delete savedUsers["duykhanh"];
@@ -710,6 +764,9 @@
             localStorage.removeItem('current_user');
         }
 
+        // Tải danh sách Tool do Admin lưu trữ
+        let savedTools = JSON.parse(localStorage.getItem('app_tools')) || [];
+
         function generateRandomCode() {
             return "NAP-" + Math.floor(100000 + Math.random() * 900000);
         }
@@ -719,6 +776,9 @@
 
         const appState = {
             users: savedUsers,
+            tools: savedTools,
+            uploadedToolHtml: "", // Nội dung file HTML được đọc
+            selectedCategory: 'TẤT CẢ',
             currentUsername: currentUsername,
             transferCode: currentTransferCode,
             isAdmin: localStorage.getItem('is_admin') === 'true',
@@ -814,15 +874,142 @@
             closeModal('modal-auth');
         }
 
-        // ================= CẬP NHẬT GIAO DIỆN =================
+        // ================= XỬ LÝ ĐỌC FILE TOOL HTML =================
+        function handleToolFileSelect(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            document.getElementById('fileChosenLabel').innerText = `Đã chọn: ${file.name}`;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                appState.uploadedToolHtml = e.target.result;
+                document.getElementById('adminToolRawHtml').value = appState.uploadedToolHtml;
+            };
+            reader.readAsText(file);
+        }
+
+        // ================= CẬP NHẬT TẤT CẢ TÀI KHOẢN (ADMIN DEPLOY) =================
+        function adminDeployToolToAll() {
+            const name = document.getElementById('adminToolName').value.trim();
+            const rawHtml = document.getElementById('adminToolRawHtml').value.trim();
+
+            if (!name) return alert("Vui lòng nhập Tên Tool!");
+            if (!rawHtml) return alert("Vui lòng chọn file .html hoặc dán nội dung mã code của tool vào!");
+
+            const newTool = {
+                id: 'TOOL-' + Date.now(),
+                name: name,
+                category: 'TẤT CẢ',
+                htmlContent: rawHtml
+            };
+
+            appState.tools.push(newTool);
+            localStorage.setItem('app_tools', JSON.stringify(appState.tools));
+
+            // Reset form
+            document.getElementById('adminToolName').value = "";
+            document.getElementById('adminToolRawHtml').value = "";
+            document.getElementById('fileChosenLabel').innerText = "Bấm để chọn file .html từ máy";
+            appState.uploadedToolHtml = "";
+
+            updateUI();
+            alert(`🎉 ĐÃ CẬP NHẬT THÀNH CÔNG!\nTool [${name}] đã được đồng bộ cho tất cả các tài khoản trên hệ thống.`);
+        }
+
+        function adminDeleteTool(id) {
+            if (confirm("Xác nhận gỡ Tool này khỏi hệ thống?")) {
+                appState.tools = appState.tools.filter(t => t.id !== id);
+                localStorage.setItem('app_tools', JSON.stringify(appState.tools));
+                updateUI();
+            }
+        }
+
+        // ================= RENDER TOOLS TRÊN TRANG CHỦ & PHÍA ADMIN =================
+        function renderHomeTools() {
+            const container = document.getElementById('homeToolsContainer');
+            let list = appState.tools || [];
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="col-span-2 text-zinc-500 text-xs py-4">Chưa có Tool nào được cập nhật. Admin hãy vào bảng điều khiển để gắn tool!</div>';
+                return;
+            }
+
+            container.innerHTML = list.map((tool, idx) => {
+                const isEven = idx % 2 === 0;
+                const bgClass = isEven ? 'theme-bg text-white shadow' : 'bg-[#16233d] hover:bg-[#1a2942] text-white border border-[#223554]';
+                return `
+                    <button onclick="launchTool('${tool.id}')" class="${bgClass} py-3 px-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition active:scale-95 truncate">
+                        <i class="fa-solid fa-gamepad text-xs"></i>
+                        <span>${tool.name}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Chạy Tool HTML trong khung Player Fullscreen
+        function launchTool(toolId) {
+            const user = getCurrentUser();
+            if (!user) {
+                alert("Vui lòng đăng nhập để mở tool!");
+                openAuthModal('login');
+                return;
+            }
+
+            const now = Date.now();
+            if (!user.vipExpires || user.vipExpires <= now) {
+                alert("⚠️ Key VIP của bạn chưa kích hoạt hoặc đã hết hạn!\nVui lòng vào mục 'MUA KEY' để kích hoạt trước khi sử dụng.");
+                switchTab('muakey');
+                return;
+            }
+
+            const tool = appState.tools.find(t => t.id === toolId);
+            if (!tool || !tool.htmlContent) {
+                alert("Không tìm thấy dữ liệu file tool HTML!");
+                return;
+            }
+
+            document.getElementById('toolRunnerTitle').innerText = tool.name;
+            const iframe = document.getElementById('toolRunnerFrame');
+            
+            // Nạp toàn bộ code tool HTML vào iframe
+            iframe.srcdoc = tool.htmlContent;
+            document.getElementById('modal-tool-runner').classList.remove('hidden');
+        }
+
+        function closeToolRunner() {
+            const iframe = document.getElementById('toolRunnerFrame');
+            iframe.srcdoc = "";
+            document.getElementById('modal-tool-runner').classList.add('hidden');
+        }
+
+        function renderAdminToolsList() {
+            const container = document.getElementById('adminToolsListContainer');
+            const totalCount = document.getElementById('adminTotalToolsCount');
+            totalCount.innerText = `${appState.tools.length} Tool`;
+
+            if (appState.tools.length === 0) {
+                container.innerHTML = '<div class="text-zinc-500 py-1 text-[10px]">Chưa có tool nào được gắn.</div>';
+                return;
+            }
+
+            container.innerHTML = appState.tools.map(t => `
+                <div class="bg-[#10192e] border border-[#1a2942] p-2 rounded-lg flex items-center justify-between">
+                    <span class="font-bold text-white text-xs truncate max-w-[200px]">${t.name}</span>
+                    <button onclick="adminDeleteTool('${t.id}')" class="text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-2 py-1 rounded text-[10px] font-bold transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ================= CẬP NHẬT GIAO DIỆN CHUNG =================
         function updateUI() {
-            // Đồng bộ dữ liệu đơn nạp mới nhất từ bộ nhớ
             appState.deposits = JSON.parse(localStorage.getItem('app_deposits')) || [];
             appState.users = JSON.parse(localStorage.getItem('sys_users')) || {};
+            appState.tools = JSON.parse(localStorage.getItem('app_tools')) || [];
 
             const user = getCurrentUser();
 
-            // Nếu chưa đăng nhập: Bắt buộc mở modal Auth
             if (!user) {
                 openModal('modal-auth');
                 if (Object.keys(appState.users).length === 0) {
@@ -848,11 +1035,9 @@
             document.getElementById('drawerUserName').innerText = appState.currentUsername;
             document.getElementById('avatarText').innerText = appState.currentUsername.substring(0, 2).toUpperCase();
 
-            // Hiển thị mã chuyển khoản ngẫu nhiên
             document.getElementById('displayTransferCode').innerText = appState.transferCode;
             document.getElementById('depNoteInput').value = appState.transferCode;
 
-            // Quyền Admin
             const headerBadge = document.getElementById('headerRoleBadge');
             const accBadge = document.getElementById('accRoleBadge');
             const adminMenuText = document.getElementById('adminMenuText');
@@ -879,7 +1064,6 @@
                 adminStatusBadge.className = "text-[9px] bg-zinc-800 text-zinc-400 px-1.5 py-0.2 rounded font-bold uppercase";
             }
 
-            // Hạn VIP
             const warningEl = document.getElementById('vipStatusWarning');
             if (user.vipExpires && user.vipExpires > Date.now()) {
                 const diffHours = Math.round((user.vipExpires - Date.now()) / (1000 * 60 * 60));
@@ -890,10 +1074,11 @@
                 warningEl.className = "text-xs text-amber-500 font-bold pt-1";
             }
 
+            renderHomeTools();
+            renderAdminToolsList();
             renderPendingDeposits();
             renderAdminUserList();
 
-            // Danh sách Key
             const keyContainer = document.getElementById('menuKeyListContainer');
             if (appState.keys.length === 0) {
                 keyContainer.innerHTML = '<div class="text-[10px] text-zinc-500">Chưa có mã key nào.</div>';
@@ -916,6 +1101,7 @@
             }
             localStorage.setItem('app_keys', JSON.stringify(appState.keys));
             localStorage.setItem('app_deposits', JSON.stringify(appState.deposits));
+            localStorage.setItem('app_tools', JSON.stringify(appState.tools));
             localStorage.setItem('is_admin', appState.isAdmin ? 'true' : 'false');
             updateUI();
         }
@@ -1009,7 +1195,7 @@
             }
         }
 
-        // ================= QUẢN LÝ USER ADMIN & XÓA ACC =================
+        // ================= QUẢN LÝ ADMIN & XÓA TÀI KHOẢN =================
         function renderAdminUserList() {
             const container = document.getElementById('adminUserListContainer');
             const users = Object.entries(appState.users);
@@ -1322,7 +1508,6 @@
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // Khởi động
         setTheme(appState.themeColor, appState.themeHover);
         updateUI();
     </script>
